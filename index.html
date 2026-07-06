@@ -123,7 +123,7 @@
   .t-num.num-done{ border-color:#16a34a; color:#16a34a; }
   .t-num.num-scheduled{ border-color:#e2a300; color:#e2a300; }
   .t-card{ background:var(--card-bg); border:1px solid var(--card-border); border-radius:14px; padding:22px 24px; }
-  .t-card-head{ display:flex; justify-content:space-between; align-items:center; margin-bottom:16px; }
+  .t-card-head{ display:flex; justify-content:space-between; align-items:center; margin-bottom:16px; flex-wrap:wrap; gap:8px; }
   .t-card-head h3{ font-size:16px; font-weight:700; }
   .t-week-tag{ font-size:11px; color:var(--text-faint); background:#f1f2f6; padding:3px 10px; border-radius:6px; font-weight:600; }
   .t-week-tag.tag-done{ background:#e7f7ec; color:#16a34a; }
@@ -135,7 +135,7 @@
 
   /* Task detail section */
   .task{ background:var(--card-bg); border:1px solid var(--card-border); border-radius:14px; padding:26px 28px; margin-bottom:20px; }
-  .task-head{ display:flex; align-items:center; gap:12px; margin-bottom:6px; }
+  .task-head{ display:flex; align-items:center; gap:12px; margin-bottom:6px; flex-wrap:wrap; }
   .task-num{ width:26px; height:26px; border-radius:7px; background:var(--accent-soft); color:var(--accent); font-size:12px; font-weight:800; display:flex; align-items:center; justify-content:center; flex-shrink:0;}
   .task-head h3{ font-size:17px; font-weight:700; }
   .status-pill{ font-size:11px; font-weight:700; padding:3px 10px; border-radius:999px; margin-left:auto; }
@@ -162,7 +162,7 @@
   .api-box .v{ font-size:20px; font-weight:800; }
 
   .issue{ background:var(--card-bg); border:1px solid var(--card-border); border-radius:14px; padding:26px 28px; margin-bottom:20px; }
-  .issue-head{ display:flex; align-items:center; gap:12px; margin-bottom:6px; }
+  .issue-head{ display:flex; align-items:center; gap:12px; margin-bottom:6px; flex-wrap:wrap; }
   .issue-icon{ width:26px; height:26px; border-radius:7px; background:#fdecec; color:#dc2626; font-size:14px; display:flex; align-items:center; justify-content:center; flex-shrink:0; font-weight:800;}
   .issue-head h3{ font-size:17px; font-weight:700; }
   .issue-label{ font-size:11px; font-weight:700; padding:3px 10px; border-radius:999px; margin-left:auto; background:#e7f7ec; color:#16a34a; }
@@ -199,6 +199,41 @@
     .meta-row{gap:28px;}
     .api-grid{grid-template-columns:repeat(2,1fr);}
     .form-grid{grid-template-columns:1fr;}
+  }
+
+  @media(max-width:600px){
+    .main{padding:24px 18px;}
+    h1{font-size:30px; letter-spacing:-.5px;}
+    h2{font-size:21px;}
+    .lede{font-size:14px;}
+    .badge{font-size:11px; padding:5px 12px;}
+    .meta-row{gap:20px 32px;}
+    .stat-card{padding:18px 18px;}
+    .stat-card .stat-num{font-size:28px;}
+
+    .timeline{padding-left:34px;}
+    .timeline::before{left:11px;}
+    .t-num{left:-34px; width:26px; height:26px; font-size:12px;}
+    .t-card{padding:18px 16px;}
+    .t-card-head h3{font-size:15px;}
+    .chip{font-size:12.5px; padding:8px 12px;}
+
+    .task{padding:20px 18px;}
+    .task-head h3{font-size:15.5px;}
+    .task-body{padding-left:0; margin-top:12px;}
+    .subhead{margin-left:0;}
+    .form-grid{margin-left:0;}
+    .api-grid{grid-template-columns:1fr 1fr; margin-left:0;}
+    .flag{margin-left:0;}
+    .plugin-dropdown{margin-left:0;}
+
+    .issue{padding:20px 18px;}
+    .issue-head h3{font-size:15.5px;}
+    .issue-block{margin-left:0;}
+    .log-box{font-size:10.5px; padding:12px 14px;}
+
+    table{font-size:12px;}
+    th, td{padding:7px 8px;}
   }
 </style>
 </head>
@@ -241,7 +276,7 @@
         embed shipped as part of our SEO recommendations, and a full round of web maintenance completed across security,
         backups, server performance, plugin updates, form testing and API integrity. Five event pages are built and ready,
         pending client-approved copy, alongside a Sandton location pin fix and a full form mapping review this week. A
-        campaign removal is scheduled for 31 July.
+        campaign removal is scheduled for 31 July. An outdated accessories article was also removed from the site this week.
       </p>
 
       <div class="meta-row">
@@ -256,8 +291,8 @@
       <div class="stat-cards">
         <div class="stat-card">
           <div class="stat-label">Tasks completed</div>
-          <div class="stat-num blue">3</div>
-          <div class="stat-sub">Staging page, test drive embed, web maintenance</div>
+          <div class="stat-num blue">4</div>
+          <div class="stat-sub">Staging page, test drive embed, web maintenance, article removal</div>
         </div>
         <div class="stat-card">
           <div class="stat-label">Tasks still working on</div>
@@ -286,6 +321,7 @@
               <div class="chip chip-done">Live staging build for "We Buy Back Subaru" campaign</div>
               <div class="chip chip-done">Book a Test Drive inline forms + CTA buttons embedded (SEO recommendation)</div>
               <div class="chip chip-done">Web maintenance — full platform health check covering security, backups, server performance, plugin updates, form testing, and API integrity across CRM, AutoTrader and Everlytics</div>
+              <div class="chip chip-done">Article removed from website: <a href="https://www.subaru.co.za/tech/eight-cool-accessories-you-can-fit-to-your-dirt-loving-subaru/" target="_blank" style="color:var(--accent); font-weight:600;">Eight Cool Accessories You Can Fit To Your Dirt-Loving Subaru</a></div>
             </div>
           </div>
         </div>
@@ -336,7 +372,7 @@
           <h3>Events pages</h3>
           <span class="status-pill status-progress">In progress</span>
         </div>
-        <div class="task-body">5x events built out. Waiting on client-approved copy before these go live.</div>
+        <div class="task-body">5x events built out. Waiting on client-approved copy before these go live. Staging: <a href="https://www.subaru.co.za/staging-subaru-events-23h4f3hjfh3fhfh3f/" target="_blank" style="color:var(--accent); font-weight:600;">view link</a></div>
       </div>
 
       <!-- TASK 3 -->
@@ -435,6 +471,16 @@
           <div class="form-row"><span class="n">Duration</span><span class="v">3.56s</span></div>
         </div>
         <div class="flag" style="color:var(--text-muted); font-weight:400;">Deleted: XV 2018 (Nelspruit), XV 2023 (Nelspruit), WRX 2024 (Edenvale), Forester 2023 (Edenvale).</div>
+      </div>
+
+      <!-- TASK 5 -->
+      <div class="task">
+        <div class="task-head">
+          <div class="task-num">5</div>
+          <h3>Article removal</h3>
+          <span class="status-pill status-done">Done</span>
+        </div>
+        <div class="task-body">Removed outdated accessories article from the site: <a href="https://www.subaru.co.za/tech/eight-cool-accessories-you-can-fit-to-your-dirt-loving-subaru/" target="_blank" style="color:var(--accent); font-weight:600;">Eight Cool Accessories You Can Fit To Your Dirt-Loving Subaru</a></div>
       </div>
 
     </div>
