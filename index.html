@@ -587,18 +587,22 @@
 
         <div class="issue-block">
           <div class="k">What we found</div>
-          <p>The notification rule was set to send to <strong>info@subaru.co.za</strong> when Vehicle Model = "Subaru Bellville."
-          Bellville is a dealer, not a vehicle model, so the condition never matched correctly and WordPress rejected the
-          notification with "Cannot send email because the TO address is invalid."</p>
+          <p>During routine form testing, the Bellville notification rule was found routing off <strong>Vehicle Model</strong>
+          instead of <strong>Select Dealer</strong> — the only dealer of the 13 configured this way. Every other dealer
+          notification rule was correctly set up against Select Dealer, confirming this was an isolated case rather than a
+          build-wide issue. Because "Subaru Bellville" was never a valid Vehicle Model value, the condition never matched,
+          and WordPress rejected the notification with "Cannot send email because the TO address is invalid."</p>
 
           <div class="k">Root cause</div>
-          <p>Notification routing was built on the wrong form field. It should have been keyed off <strong>Select Dealer</strong>,
-          not Vehicle Model.</p>
+          <p>The Bellville rule was confirmed correct as recently as last month's testing, so this was a recent regression
+          rather than a longstanding fault — how the field reverted isn't yet clear, but the config on every other dealer
+          remained untouched and correct throughout. The newly deployed Subaru Lead Monitor flagged the misrouted
+          notification through its live monitoring layer, which is exactly the kind of silent failure it was built to catch.</p>
 
           <div class="k">Fix applied</div>
-          <p>Rebuilt the notification condition to trigger off the Select Dealer field instead, so Bellville leads (and every
-          other dealer) route to the correct inbox. Confirmed fixed with a live test submission — webhook fired and the lead
-          synced successfully to the CRM.</p>
+          <p>Corrected the Bellville rule to route off Select Dealer, in line with all other dealers, as soon as the Lead
+          Monitor surfaced the error. Confirmed fixed with a live test submission — webhook fired and the lead synced
+          successfully to the CRM.</p>
 
           <div class="k">Verification log</div>
           <div class="log-box">2026-06-24 13:37:47 — GF_Webhooks: Sending lead to CMS Cloud API (leadsv3.cmscloud.co.za)
