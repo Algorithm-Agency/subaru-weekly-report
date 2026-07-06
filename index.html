@@ -141,6 +141,7 @@
   .status-pill{ font-size:11px; font-weight:700; padding:3px 10px; border-radius:999px; margin-left:auto; }
   .status-done{ background:#e7f7ec; color:#16a34a; }
   .status-progress{ background:#fff4e0; color:#b06b00; }
+  .status-scheduled{ background:#e8edfc; color:#3b63f0; }
   .task-body{ font-size:13.5px; color:var(--text-muted); line-height:1.6; margin-top:10px; padding-left:38px; }
 
   table{ width:100%; border-collapse:collapse; margin-top:12px; font-size:13px; }
@@ -278,7 +279,10 @@
         recommendations and are currently in QC review, with go-live expected on the next update. Five event pages are built
         and ready, pending client-approved copy, alongside a Sandton location pin fix and a full form mapping review this week. A
         campaign removal is scheduled for 31 July 2026. An outdated accessories article was also removed from the site this
-        week, and the campaign end date has been updated/extended to 31 July 2026 across the site.
+        week, and the campaign end date has been updated/extended to 31 July 2026 across the site. A dealer/province field
+        swap was fixed on the Maintenance Campaign form, international number support was enabled on that same form, and
+        the Subaru Lead Monitor — a custom automation tool for tracking form and CRM webhook health — has been deployed
+        and is now live across all 13 dealerships.
       </p>
 
       <div class="meta-row">
@@ -293,8 +297,8 @@
       <div class="stat-cards">
         <div class="stat-card">
           <div class="stat-label">Tasks completed</div>
-          <div class="stat-num blue">4</div>
-          <div class="stat-sub">Staging page, web maintenance, article removal, campaign date extension</div>
+          <div class="stat-num blue">7</div>
+          <div class="stat-sub">Staging page, web maintenance, article removal, campaign extension, form fix, Lead Monitor tool, intl. numbers</div>
         </div>
         <div class="stat-card">
           <div class="stat-label">Tasks still working on</div>
@@ -320,10 +324,13 @@
           <div class="t-card">
             <div class="t-card-head"><h3>Completed This Week</h3><span class="t-week-tag tag-done">Done</span></div>
             <div class="chips">
-              <div class="chip chip-done">Live staging build for "We Buy Back Subaru" campaign</div>
+              <div class="chip chip-done">Live staging build for "We Buy Back Subaru" campaign — <a href="https://www.staging.subaru.co.za/we-buy-back/" target="_blank" style="color:var(--accent); font-weight:600;">view link</a></div>
               <div class="chip chip-done">Web maintenance — full platform health check covering security, backups, server performance, plugin updates, form testing, and API integrity across CRM, AutoTrader and Everlytics</div>
               <div class="chip chip-done">Article removed from website: <a href="https://www.subaru.co.za/tech/eight-cool-accessories-you-can-fit-to-your-dirt-loving-subaru/" target="_blank" style="color:var(--accent); font-weight:600;">Eight Cool Accessories You Can Fit To Your Dirt-Loving Subaru</a></div>
               <div class="chip chip-done">Campaign end date updated/extended to 31 July 2026 across the site — <a href="https://www.subaru.co.za/maintenance-campaign/" target="_blank" style="color:var(--accent); font-weight:600;">view link</a></div>
+              <div class="chip chip-done">Fixed dealer / province field swap on the Maintenance Campaign form</div>
+              <div class="chip chip-done">Deployed the Subaru Lead Monitor — custom automation tool for form + CRM webhook monitoring</div>
+              <div class="chip chip-done">Enabled international number support on the Maintenance Campaign form</div>
             </div>
           </div>
         </div>
@@ -365,7 +372,7 @@
           <h3>Build page with staging link — We Buy Back Subaru</h3>
           <span class="status-pill status-done">Done</span>
         </div>
-        <div class="task-body">Page built out and live on staging, ready for review.</div>
+        <div class="task-body">Page built out and live on staging, ready for review. Staging: <a href="https://www.staging.subaru.co.za/we-buy-back/" target="_blank" style="color:var(--accent); font-weight:600;">view link</a></div>
       </div>
 
       <!-- TASK 2 -->
@@ -494,6 +501,74 @@
           <span class="status-pill status-done">Done</span>
         </div>
         <div class="task-body">Campaign end date updated/extended to 31 July 2026 across the site. <a href="https://www.subaru.co.za/maintenance-campaign/" target="_blank" style="color:var(--accent); font-weight:600;">view link</a></div>
+      </div>
+
+      <!-- TASK 7 -->
+      <div class="task">
+        <div class="task-head">
+          <div class="task-num">7</div>
+          <h3>Dealer / province field fix — Maintenance Campaign form</h3>
+          <span class="status-pill status-done">Done</span>
+        </div>
+        <div class="task-body">Fixed an issue on the Maintenance Campaign form where the Dealer and Province fields had been switched around.</div>
+      </div>
+
+      <!-- TASK 8 -->
+      <div class="task">
+        <div class="task-head">
+          <div class="task-num">8</div>
+          <h3>Subaru Lead Monitor — custom automation tool</h3>
+          <span class="status-pill status-done">Done</span>
+        </div>
+        <div class="task-body">
+          Deployed the Subaru Lead Monitor, a custom WordPress plugin built to close the "blind spot" of silent lead
+          routing and CRM webhook failures. It combines an automated test suite that safely simulates tagged test leads
+          with a 24/7 live monitoring layer tracking real customer submissions in real time.<br><br>
+          Email notification routing is now actively monitored across all 13 dealerships. Full end-to-end CRM tracking
+          is already live for 3 initial dealers, with the remaining dealer reference codes currently being sourced to
+          extend coverage to the rest.
+        </div>
+      </div>
+
+      <!-- TASK 9 -->
+      <div class="task">
+        <div class="task-head">
+          <div class="task-num">9</div>
+          <h3>International number support — Maintenance Campaign form</h3>
+          <span class="status-pill status-done">Done</span>
+        </div>
+        <div class="task-body">Enabled support for international phone numbers on the Maintenance Campaign form.</div>
+        <div class="flag" style="margin-top:12px;">Note: let us know if this should be rolled out across all forms site-wide — we'll brief it into dev so it's applied consistently.</div>
+      </div>
+
+      <!-- TASK 10 -->
+      <div class="task">
+        <div class="task-head">
+          <div class="task-num">10</div>
+          <h3>Location pin fix — Subaru Sandton</h3>
+          <span class="status-pill status-progress">In progress</span>
+        </div>
+        <div class="task-body">Map pin for the Subaru Sandton dealership is showing an incorrect location on the site's dealer locator. Fix is in progress this week.</div>
+      </div>
+
+      <!-- TASK 11 -->
+      <div class="task">
+        <div class="task-head">
+          <div class="task-num">11</div>
+          <h3>Full form mapping check</h3>
+          <span class="status-pill status-progress">In progress</span>
+        </div>
+        <div class="task-body">Reviewing all forms across the site to confirm field mapping (dealer, province, vehicle model, notification routing) is correctly configured end-to-end, following the dealer/province and WRX routing issues found this week. Next update expected 10 July 2026.</div>
+      </div>
+
+      <!-- TASK 12 -->
+      <div class="task">
+        <div class="task-head">
+          <div class="task-num">12</div>
+          <h3>Campaign removal — Maintenance Campaign</h3>
+          <span class="status-pill status-scheduled">Scheduled</span>
+        </div>
+        <div class="task-body">Maintenance Campaign to be removed from the site once it concludes. Scheduled for 31 July 2026. <a href="https://www.subaru.co.za/maintenance-campaign/" target="_blank" style="color:var(--accent); font-weight:600;">view link</a></div>
       </div>
 
     </div>
