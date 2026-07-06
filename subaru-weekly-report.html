@@ -1,0 +1,527 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>SubaruSA — Dev</title>
+<style>
+  :root{
+    --sidebar-bg:#0d1117;
+    --sidebar-border:#1c2230;
+    --accent:#3b63f0;
+    --accent-soft:#e8edfc;
+    --green:#16a34a;
+    --page-bg:#f4f6fb;
+    --card-bg:#ffffff;
+    --card-border:#e5e8f0;
+    --text-dark:#12131a;
+    --text-muted:#6b7280;
+    --text-faint:#9aa0ad;
+  }
+  *{box-sizing:border-box; margin:0; padding:0;}
+  html{ scroll-behavior:smooth; }
+  body{
+    font-family: -apple-system, "Segoe UI", Inter, Helvetica, Arial, sans-serif;
+    background: var(--page-bg);
+    color: var(--text-dark);
+    display:flex;
+    min-height:100vh;
+  }
+
+  /* Sidebar */
+  .sidebar{
+    width:260px;
+    flex-shrink:0;
+    background: var(--sidebar-bg);
+    color:#e5e7ef;
+    padding:28px 22px;
+    display:flex;
+    flex-direction:column;
+    position:fixed;
+    top:0; left:0;
+    height:100vh;
+    overflow-y:auto;
+  }
+  .brand{ margin-bottom:32px; }
+  .brand-name{ font-size:20px; font-weight:800; color:#5b82f5; letter-spacing:0.2px; }
+  .brand-tag{ font-size:10px; letter-spacing:1.5px; color:#5c6270; margin-top:4px; text-transform:uppercase; }
+
+  .side-label{
+    font-size:10px; letter-spacing:1.5px; color:#565c6b; text-transform:uppercase; margin-bottom:10px;
+  }
+  .doc-block{ margin-bottom:28px; }
+  .doc-title{ font-size:13px; font-weight:600; color:#f1f2f6; }
+
+  .nav{ display:flex; flex-direction:column; gap:4px; margin-bottom:auto; }
+  .nav-item{
+    display:flex; align-items:center; gap:10px;
+    padding:9px 10px; border-radius:8px;
+    font-size:13px; color:#a7abb8; cursor:pointer;
+    transition: background .15s ease, color .15s ease;
+    user-select:none;
+    text-decoration:none;
+  }
+  .nav-item:hover{ background:#151a24; color:#e2e4ea; }
+  .nav-item.active{ background: var(--accent); color:#fff; }
+  .nav-num{
+    font-size:10px; width:20px; height:20px; border-radius:5px;
+    display:flex; align-items:center; justify-content:center;
+    background:#1a2030; color:#8b93a8; flex-shrink:0;
+  }
+  .nav-item.active .nav-num{ background:rgba(255,255,255,.25); color:#fff; }
+
+  .sidebar-footer{
+    border-top:1px solid var(--sidebar-border);
+    padding-top:18px; margin-top:18px;
+    font-size:12px; color:#8b93a8;
+  }
+  .sidebar-footer .row{ margin-bottom:14px; }
+  .sidebar-footer .label{ color:#565c6b; font-size:10px; text-transform:uppercase; letter-spacing:1px; margin-bottom:3px;}
+  .sidebar-footer .value{ color:#e2e4ea; font-weight:600; }
+
+  /* Main content */
+  .main{ flex:1; margin-left:260px; padding:56px 64px; max-width:1100px; }
+  .section{ display:block; scroll-margin-top:40px; padding-bottom:60px; }
+  .section + .section{ border-top:1px solid var(--card-border); padding-top:56px; }
+
+  .badge{
+    display:inline-flex; align-items:center; gap:8px;
+    background: var(--accent-soft); color: var(--accent);
+    font-size:12px; font-weight:600; letter-spacing:.3px;
+    padding:6px 14px; border-radius:999px; margin-bottom:20px;
+  }
+  .badge-dot{ width:6px; height:6px; border-radius:50%; background: var(--accent); }
+
+  h1{ font-size:42px; font-weight:800; line-height:1.1; letter-spacing:-1px; margin-bottom:20px;}
+  .lede{ font-size:15px; line-height:1.7; color: var(--text-muted); max-width:760px; margin-bottom:30px; }
+
+  .meta-row{ display:flex; gap:56px; padding-top:24px; border-top:1px solid var(--card-border); margin-bottom:44px; flex-wrap:wrap;}
+  .meta-item .label{ font-size:10px; text-transform:uppercase; letter-spacing:1px; color:var(--text-faint); margin-bottom:6px;}
+  .meta-item .value{ font-size:15px; font-weight:700; }
+  .meta-item .value.link{ color: var(--accent); }
+
+  .eyebrow{ font-size:12px; font-weight:700; letter-spacing:1px; color: var(--accent); text-transform:uppercase; margin-bottom:8px;}
+  h2{ font-size:26px; font-weight:800; margin-bottom:24px; letter-spacing:-.3px;}
+
+  .stat-cards{ display:grid; grid-template-columns:repeat(3,1fr); gap:20px; margin-bottom:56px; }
+  .stat-card{ background:var(--card-bg); border:1px solid var(--card-border); border-radius:14px; padding:22px 24px; }
+  .stat-card .stat-label{ font-size:10px; letter-spacing:1px; text-transform:uppercase; color:var(--text-faint); margin-bottom:10px;}
+  .stat-card .stat-num{ font-size:34px; font-weight:800; margin-bottom:6px; }
+  .stat-card .stat-num.blue{ color: var(--accent); }
+  .stat-card .stat-num.green{ color: var(--green); }
+  .stat-card .stat-sub{ font-size:13px; color: var(--text-muted); }
+
+  .timeline{ position:relative; padding-left:44px; }
+  .timeline::before{
+    content:''; position:absolute; left:15px; top:14px; bottom:14px; width:2px; background:var(--card-border);
+  }
+  .t-step{ position:relative; margin-bottom:26px; }
+  .t-num{
+    position:absolute; left:-44px; top:0; width:32px; height:32px; border-radius:50%;
+    background:#fff; border:2px solid var(--accent); color:var(--accent);
+    font-size:13px; font-weight:700; display:flex; align-items:center; justify-content:center;
+  }
+  .t-num.num-done{ border-color:#16a34a; color:#16a34a; }
+  .t-num.num-scheduled{ border-color:#e2a300; color:#e2a300; }
+  .t-card{ background:var(--card-bg); border:1px solid var(--card-border); border-radius:14px; padding:22px 24px; }
+  .t-card-head{ display:flex; justify-content:space-between; align-items:center; margin-bottom:16px; }
+  .t-card-head h3{ font-size:16px; font-weight:700; }
+  .t-week-tag{ font-size:11px; color:var(--text-faint); background:#f1f2f6; padding:3px 10px; border-radius:6px; font-weight:600; }
+  .t-week-tag.tag-done{ background:#e7f7ec; color:#16a34a; }
+  .t-week-tag.tag-scheduled{ background:#fff4e0; color:#b06b00; }
+  .chips{ display:flex; flex-wrap:wrap; gap:10px; }
+  .chip{ font-size:13px; background:#f6f7fb; border:1px solid var(--card-border); border-left:3px solid var(--card-border); padding:8px 14px; border-radius:8px; color:var(--text-dark); }
+  .chip.chip-done{ border-left-color:#16a34a; }
+  .chip.chip-scheduled{ border-left-color:#e2a300; }
+
+  /* Task detail section */
+  .task{ background:var(--card-bg); border:1px solid var(--card-border); border-radius:14px; padding:26px 28px; margin-bottom:20px; }
+  .task-head{ display:flex; align-items:center; gap:12px; margin-bottom:6px; }
+  .task-num{ width:26px; height:26px; border-radius:7px; background:var(--accent-soft); color:var(--accent); font-size:12px; font-weight:800; display:flex; align-items:center; justify-content:center; flex-shrink:0;}
+  .task-head h3{ font-size:17px; font-weight:700; }
+  .status-pill{ font-size:11px; font-weight:700; padding:3px 10px; border-radius:999px; margin-left:auto; }
+  .status-done{ background:#e7f7ec; color:#16a34a; }
+  .status-progress{ background:#fff4e0; color:#b06b00; }
+  .task-body{ font-size:13.5px; color:var(--text-muted); line-height:1.6; margin-top:10px; padding-left:38px; }
+
+  table{ width:100%; border-collapse:collapse; margin-top:12px; font-size:13px; }
+  th{ text-align:left; font-size:10px; text-transform:uppercase; letter-spacing:.5px; color:var(--text-faint); padding:8px 10px; border-bottom:1px solid var(--card-border); }
+  td{ padding:8px 10px; border-bottom:1px solid #f0f1f5; }
+  tr:last-child td{ border-bottom:none; }
+  .mono{ font-variant-numeric: tabular-nums; color:var(--text-dark); font-weight:600;}
+  .subhead{ font-size:12px; font-weight:800; text-transform:uppercase; letter-spacing:.6px; color:var(--text-faint); margin:18px 0 6px 38px; }
+
+  .form-grid{ display:grid; grid-template-columns:1fr 1fr; gap:8px 24px; margin-left:38px; margin-top:6px;}
+  .form-row{ display:flex; justify-content:space-between; font-size:13.5px; padding:6px 0; border-bottom:1px dashed #eef0f4; }
+  .form-row .n{ color:var(--text-dark); }
+  .form-row .v{ font-weight:700; color:var(--accent); }
+  .flag{ font-size:12px; color:#b06b00; font-weight:600; margin-left:38px; margin-top:4px;}
+
+  .api-grid{ display:grid; grid-template-columns:repeat(4,1fr); gap:14px; margin:14px 0 8px 38px; }
+  .api-box{ background:#f6f7fb; border-radius:10px; padding:14px 16px; }
+  .api-box .k{ font-size:10px; text-transform:uppercase; color:var(--text-faint); letter-spacing:.5px; margin-bottom:4px;}
+  .api-box .v{ font-size:20px; font-weight:800; }
+
+  .issue{ background:var(--card-bg); border:1px solid var(--card-border); border-radius:14px; padding:26px 28px; margin-bottom:20px; }
+  .issue-head{ display:flex; align-items:center; gap:12px; margin-bottom:6px; }
+  .issue-icon{ width:26px; height:26px; border-radius:7px; background:#fdecec; color:#dc2626; font-size:14px; display:flex; align-items:center; justify-content:center; flex-shrink:0; font-weight:800;}
+  .issue-head h3{ font-size:17px; font-weight:700; }
+  .issue-label{ font-size:11px; font-weight:700; padding:3px 10px; border-radius:999px; margin-left:auto; background:#e7f7ec; color:#16a34a; }
+  .issue-block{ margin-left:38px; margin-top:14px; }
+  .issue-block .k{ font-size:10px; text-transform:uppercase; letter-spacing:.6px; color:var(--text-faint); margin-bottom:4px; font-weight:700; }
+  .issue-block p{ font-size:13.5px; color:var(--text-dark); line-height:1.6; margin-bottom:16px; }
+  .log-box{
+    background:#0d1117; color:#c9d1d9; font-family: "SFMono-Regular", Consolas, "Liberation Mono", Menlo, monospace;
+    font-size:11.5px; line-height:1.7; border-radius:10px; padding:16px 18px; overflow-x:auto; white-space:pre;
+    margin-bottom:6px;
+  }
+  .log-ok{ color:#3fb950; }
+  .log-note{ font-size:12px; color:var(--text-faint); margin-top:6px;}
+
+  .plugin-dropdown{ margin-left:38px; margin-top:14px; }
+  .plugin-dropdown summary{
+    cursor:pointer; font-size:13px; font-weight:700; color: var(--accent);
+    list-style:none; display:flex; align-items:center; gap:6px; padding:2px 0;
+    user-select:none;
+  }
+  .plugin-dropdown summary::-webkit-details-marker{ display:none; }
+  .plugin-dropdown summary::before{
+    content:'▸'; font-size:11px; transition: transform .15s ease; display:inline-block;
+  }
+  .plugin-dropdown[open] summary::before{ transform: rotate(90deg); }
+  .plugin-dropdown table{ width:100%; margin-top:10px; background:#f6f7fb; border-radius:10px; padding:4px 6px; }
+  .plugin-dropdown th, .plugin-dropdown td{ padding:8px 14px; }
+
+  @media(max-width:900px){
+    body{flex-direction:column;}
+    .sidebar{position:relative; width:100%; height:auto;}
+    .main{margin-left:0; padding:32px 24px; height:auto; overflow-y:visible;}
+    .stat-cards{grid-template-columns:1fr;}
+    .meta-row{gap:28px;}
+    .api-grid{grid-template-columns:repeat(2,1fr);}
+    .form-grid{grid-template-columns:1fr;}
+  }
+</style>
+</head>
+<body>
+
+  <div class="sidebar">
+    <div class="brand">
+      <div class="brand-name">Algorithm</div>
+      <div class="brand-tag">Turn potential into performance</div>
+    </div>
+
+    <div class="side-label">Document</div>
+    <div class="doc-block">
+      <div class="doc-title">SubaruSA — Dev</div>
+    </div>
+
+    <div class="side-label">Sections</div>
+    <div class="nav">
+      <a class="nav-item active" href="#overview" data-section="overview"><span class="nav-num">01</span> Overview</a>
+      <a class="nav-item" href="#breakdown" data-section="breakdown"><span class="nav-num">02</span> Weekly breakdown</a>
+      <a class="nav-item" href="#details" data-section="details"><span class="nav-num">03</span> Task details</a>
+      <a class="nav-item" href="#issues" data-section="issues"><span class="nav-num">04</span> Issues & fixes</a>
+    </div>
+
+    <div class="sidebar-footer">
+      <div class="row"><div class="label">Reported by</div><div class="value">Algorithm</div></div>
+      <div class="row"><div class="label">Week ending</div><div class="value">3 July 2026</div></div>
+      <div class="row"><div class="label">Reference</div><div class="value">SUBARUSA1</div></div>
+    </div>
+  </div>
+
+  <div class="main">
+
+    <!-- SECTION 1 -->
+    <div class="section" id="overview">
+      <div class="badge"><span class="badge-dot"></span>Weekly Task Report · Subaru</div>
+      <h1>SubaruSA — Dev</h1>
+      <p class="lede">
+        The development team closed out the week with the "We Buy Back Subaru" staging page live, the Book a Test Drive
+        embed shipped as part of our SEO recommendations, and a full round of web maintenance completed across security,
+        backups, server performance, plugin updates, form testing and API integrity. Five event pages are built and ready,
+        pending client-approved copy, alongside a Sandton location pin fix and a full form mapping review this week. A
+        campaign removal is scheduled for 31 July.
+      </p>
+
+      <div class="meta-row">
+        <div class="meta-item"><div class="label">Reported by</div><div class="value">Algorithm</div></div>
+        <div class="meta-item"><div class="label">Week ending</div><div class="value">3 July 2026</div></div>
+        <div class="meta-item"><div class="label">Reference</div><div class="value">SUBARUSA1</div></div>
+        <div class="meta-item"><div class="label">Department</div><div class="value link">Dev</div></div>
+      </div>
+
+      <div class="eyebrow">Section 01 · This week</div>
+      <h2>Where things stand</h2>
+      <div class="stat-cards">
+        <div class="stat-card">
+          <div class="stat-label">Tasks completed</div>
+          <div class="stat-num blue">3</div>
+          <div class="stat-sub">Staging page, test drive embed, web maintenance</div>
+        </div>
+        <div class="stat-card">
+          <div class="stat-label">Tasks still working on</div>
+          <div class="stat-num green">3</div>
+          <div class="stat-sub">Copy approval, pin fix, form mapping check</div>
+        </div>
+        <div class="stat-card">
+          <div class="stat-label">Scheduled ahead</div>
+          <div class="stat-num blue">1</div>
+          <div class="stat-sub">Campaign removal — 31 July</div>
+        </div>
+      </div>
+    </div>
+
+    <!-- SECTION 2 -->
+    <div class="section" id="breakdown">
+      <div class="eyebrow">Section 02 · Progress</div>
+      <h2>Weekly breakdown</h2>
+
+      <div class="timeline">
+        <div class="t-step">
+          <div class="t-num num-done">1</div>
+          <div class="t-card">
+            <div class="t-card-head"><h3>Completed This Week</h3><span class="t-week-tag tag-done">Done</span></div>
+            <div class="chips">
+              <div class="chip chip-done">Live staging build for "We Buy Back Subaru" campaign</div>
+              <div class="chip chip-done">Book a Test Drive inline forms + CTA buttons embedded (SEO recommendation)</div>
+              <div class="chip chip-done">Web maintenance — full platform health check covering security, backups, server performance, plugin updates, form testing, and API integrity across CRM, AutoTrader and Everlytics</div>
+            </div>
+          </div>
+        </div>
+
+        <div class="t-step">
+          <div class="t-num num-scheduled">2</div>
+          <div class="t-card">
+            <div class="t-card-head"><h3>In Progress</h3><span class="t-week-tag tag-scheduled">Scheduled</span></div>
+            <div class="chips">
+              <div class="chip chip-scheduled">5x Event pages built, awaiting client-approved copy — staging: <a href="https://www.subaru.co.za/staging-subaru-events-23h4f3hjfh3fhfh3f/" target="_blank" style="color:var(--accent); font-weight:600;">view link</a></div>
+              <div class="chip chip-scheduled">Location pin to be fixed — Subaru Sandton</div>
+              <div class="chip chip-scheduled">Full form mapping check — in progress this week, next update 10 July</div>
+            </div>
+          </div>
+        </div>
+
+        <div class="t-step">
+          <div class="t-num num-scheduled">3</div>
+          <div class="t-card">
+            <div class="t-card-head"><h3>Tasks Still to Come</h3><span class="t-week-tag tag-scheduled">Scheduled</span></div>
+            <div class="chips">
+              <div class="chip chip-scheduled">Campaign removal — scheduled for 31 July</div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- SECTION 3 -->
+    <div class="section" id="details">
+      <div class="eyebrow">Section 03 · Detail</div>
+      <h2>Task details</h2>
+
+      <!-- TASK 1 -->
+      <div class="task">
+        <div class="task-head">
+          <div class="task-num">1</div>
+          <h3>Build page with staging link — We Buy Back Subaru</h3>
+          <span class="status-pill status-done">Done</span>
+        </div>
+        <div class="task-body">Page built out and live on staging, ready for review.</div>
+      </div>
+
+      <!-- TASK 2 -->
+      <div class="task">
+        <div class="task-head">
+          <div class="task-num">2</div>
+          <h3>Events pages</h3>
+          <span class="status-pill status-progress">In progress</span>
+        </div>
+        <div class="task-body">5x events built out. Waiting on client-approved copy before these go live.</div>
+      </div>
+
+      <!-- TASK 3 -->
+      <div class="task">
+        <div class="task-head">
+          <div class="task-num">3</div>
+          <h3>Embed "Book a Test Drive" buttons + inline forms</h3>
+          <span class="status-pill status-done">Done</span>
+        </div>
+        <div class="task-body">Implemented as part of our SEO recommendations.</div>
+      </div>
+
+      <!-- TASK 4 -->
+      <div class="task">
+        <div class="task-head">
+          <div class="task-num">4</div>
+          <h3>Web maintenance</h3>
+          <span class="status-pill status-done">Done</span>
+        </div>
+
+        <div class="subhead">Form testing — Gravity Forms (all confirmed working)</div>
+        <div class="form-grid">
+          <div class="form-row"><span class="n">Fall in Love with Peace of Mind</span><span class="v">12 entries</span></div>
+          <div class="form-row"><span class="n">Book a Test Drive — Forester</span><span class="v">10 entries</span></div>
+          <div class="form-row"><span class="n">Book a Test Drive — Crosstrek</span><span class="v">9 entries</span></div>
+          <div class="form-row"><span class="n">Book a Test Drive — WRX</span><span class="v">9 entries</span></div>
+          <div class="form-row"><span class="n">Book a Test Drive — Outback</span><span class="v">10 entries</span></div>
+          <div class="form-row"><span class="n">Parts Enquiry</span><span class="v">1 entry</span></div>
+          <div class="form-row"><span class="n">Recalls</span><span class="v">1 entry</span></div>
+          <div class="form-row"><span class="n">Service Booking</span><span class="v">1 entry</span></div>
+          <div class="form-row"><span class="n">Referral Program Form</span><span class="v">1 entry</span></div>
+          <div class="form-row"><span class="n">Stay Connected Form</span><span class="v">1 entry — successful</span></div>
+          <div class="form-row"><span class="n">Change of Ownership Form</span><span class="v">1 entry</span></div>
+        </div>
+        <div class="flag">⚠ WRX notification routing error found (invalid TO address, isolated to Bellville branch) — resolved.</div>
+
+        <div class="subhead">Plugin audit</div>
+        <table style="margin-left:38px; width:calc(100% - 38px);">
+          <tr><th>Plugin</th><th>Before</th><th>After</th></tr>
+          <tr><td>Dynamics 365 Integration</td><td class="mono">1.4</td><td class="mono">1.4.1</td></tr>
+          <tr><td>Elementor</td><td class="mono">4.1.3</td><td class="mono">4.1.4</td></tr>
+          <tr><td>SiteSEO — SEO Simplified</td><td class="mono">1.2.5</td><td class="mono">1.3.9</td></tr>
+          <tr><td>WP Mail SMTP</td><td class="mono">4.8.0</td><td class="mono">4.9.0</td></tr>
+          <tr><td>Yoast SEO</td><td class="mono">27.8</td><td class="mono">27.9</td></tr>
+        </table>
+        <div class="flag" style="color:var(--text-muted); font-weight:400;">26 additional plugins checked and confirmed already on latest version (ACF PRO, Wordfence, LiteSpeed Cache, Gravity Forms core + add-ons, WP All Import/Export, and others).</div>
+
+        <details class="plugin-dropdown">
+          <summary>View all 26 plugins &amp; current versions</summary>
+          <table>
+            <tr><th>Plugin</th><th>Version</th></tr>
+            <tr><td>Advanced Custom Fields PRO</td><td class="mono">6.3.12</td></tr>
+            <tr><td>Advanced Google reCAPTCHA</td><td class="mono">5.39</td></tr>
+            <tr><td>Algorithm Maintenance Suite</td><td class="mono">0.6.2</td></tr>
+            <tr><td>All-in-One WP Migration (Unlimited)</td><td class="mono">6.77.1</td></tr>
+            <tr><td>Classic Editor</td><td class="mono">1.7.0</td></tr>
+            <tr><td>Code Snippets</td><td class="mono">3.9.6</td></tr>
+            <tr><td>Duplicate Page</td><td class="mono">4.5.9</td></tr>
+            <tr><td>Elementor Pro</td><td class="mono">3.35.0</td></tr>
+            <tr><td>Gravity Forms</td><td class="mono">2.10.5</td></tr>
+            <tr><td>Gravity Forms Address Autocomplete</td><td class="mono">4.0</td></tr>
+            <tr><td>Gravity Forms Chained Selects Add-On</td><td class="mono">1.8.1</td></tr>
+            <tr><td>Gravity Forms SendGrid Add-On</td><td class="mono">1.6.0</td></tr>
+            <tr><td>Gravity Forms Webhooks Add-On</td><td class="mono">1.7.0</td></tr>
+            <tr><td>GravityExport Lite</td><td class="mono">2.6.0</td></tr>
+            <tr><td>GTM4WP</td><td class="mono">1.22.3</td></tr>
+            <tr><td>Image Optimizer</td><td class="mono">1.7.5</td></tr>
+            <tr><td>LiteSpeed Cache</td><td class="mono">7.8.1</td></tr>
+            <tr><td>Schema &amp; Structured Data for WP &amp; AMP</td><td class="mono">1.61</td></tr>
+            <tr><td>Simple 301 Redirects</td><td class="mono">2.1.0</td></tr>
+            <tr><td>VWO (Wingify)</td><td class="mono">4.14</td></tr>
+            <tr><td>Wordfence Security</td><td class="mono">8.2.2</td></tr>
+            <tr><td>WP All Export Pro</td><td class="mono">1.8.4</td></tr>
+            <tr><td>WP All Import — Yoast WordPress SEO Add-On</td><td class="mono">1.1.8</td></tr>
+            <tr><td>WP All Import Pro</td><td class="mono">4.8.1</td></tr>
+            <tr><td>WP File Manager</td><td class="mono">8.0.4</td></tr>
+            <tr><td>WP Store Locator</td><td class="mono">2.3.2</td></tr>
+          </table>
+        </details>
+
+        <div class="subhead">AutoTrader API check</div>
+        <div class="api-grid">
+          <div class="api-box"><div class="k">Imported</div><div class="v">2</div></div>
+          <div class="api-box"><div class="k">Updated</div><div class="v">98</div></div>
+          <div class="api-box"><div class="k">Merged duplicates</div><div class="v">13</div></div>
+          <div class="api-box"><div class="k">Deleted</div><div class="v">4</div></div>
+        </div>
+        <div class="form-grid" style="margin-top:4px;">
+          <div class="form-row"><span class="n">Total active vehicles</span><span class="v">87</span></div>
+          <div class="form-row"><span class="n">Forester</span><span class="v">52</span></div>
+          <div class="form-row"><span class="n">Crosstrek</span><span class="v">11</span></div>
+          <div class="form-row"><span class="n">Outback</span><span class="v">11</span></div>
+          <div class="form-row"><span class="n">XV</span><span class="v">7</span></div>
+          <div class="form-row"><span class="n">WRX</span><span class="v">5</span></div>
+          <div class="form-row"><span class="n">WRX-STI</span><span class="v">1</span></div>
+          <div class="form-row"><span class="n">Duration</span><span class="v">3.56s</span></div>
+        </div>
+        <div class="flag" style="color:var(--text-muted); font-weight:400;">Deleted: XV 2018 (Nelspruit), XV 2023 (Nelspruit), WRX 2024 (Edenvale), Forester 2023 (Edenvale).</div>
+      </div>
+
+    </div>
+
+    <!-- SECTION 4 -->
+    <div class="section" id="issues">
+      <div class="eyebrow">Section 04 · Quality assurance</div>
+      <h2>Issues found &amp; fixes</h2>
+
+      <div class="issue">
+        <div class="issue-head">
+          <div class="issue-icon">!</div>
+          <h3>Book a Test Drive — WRX: notification email misrouted</h3>
+          <span class="issue-label">Resolved</span>
+        </div>
+
+        <div class="issue-block">
+          <div class="k">What we found</div>
+          <p>The notification rule was set to send to <strong>info@subaru.co.za</strong> when Vehicle Model = "Subaru Bellville."
+          Bellville is a dealer, not a vehicle model, so the condition never matched correctly and WordPress rejected the
+          notification with "Cannot send email because the TO address is invalid."</p>
+
+          <div class="k">Root cause</div>
+          <p>Notification routing was built on the wrong form field. It should have been keyed off <strong>Select Dealer</strong>,
+          not Vehicle Model.</p>
+
+          <div class="k">Fix applied</div>
+          <p>Rebuilt the notification condition to trigger off the Select Dealer field instead, so Bellville leads (and every
+          other dealer) route to the correct inbox. Confirmed fixed with a live test submission — webhook fired and the lead
+          synced successfully to the CRM.</p>
+
+          <div class="k">Verification log</div>
+          <div class="log-box">2026-06-24 13:37:47 — GF_Webhooks: Sending lead to CMS Cloud API (leadsv3.cmscloud.co.za)
+  dealerRef: CF151 · dealerFloor: NEWSUBARU · source: SUBARU SA LEAD
+  contact: test test · (082) 840-7653
+
+2026-06-24 13:37:48 — GF_Webhooks: Webhook sent. <span class="log-ok">Response code: 200</span>
+  { "code": "00", "leadReference": "d11584ee-d39a-470b-9832-b77e02f13e03",
+    "status": "Success", "message": "Lead Submission Successful" }</div>
+          <div class="log-note">Note: an unrelated background-process timeout appeared in the same log (Admin Ajax dispatch,
+          cURL 1000ms) — this did not affect the lead reaching the CRM and is a known async-dispatch retry, not a data-loss issue.</div>
+        </div>
+      </div>
+    </div>
+
+  </div>
+
+<script>
+  const navItems = document.querySelectorAll('.nav-item');
+  const sections = document.querySelectorAll('.section');
+
+  navItems.forEach(item=>{
+    item.addEventListener('click', ()=>{
+      navItems.forEach(i=>i.classList.remove('active'));
+      item.classList.add('active');
+    });
+  });
+
+  // Scrollspy: find the section whose top has most recently passed the marker line
+  const MARKER = 120; // px from top of viewport
+
+  function updateActiveSection(){
+    let currentId = sections[0].id;
+    sections.forEach(section=>{
+      const rect = section.getBoundingClientRect();
+      if(rect.top - MARKER <= 0){
+        currentId = section.id;
+      }
+    });
+    navItems.forEach(i=>{
+      i.classList.toggle('active', i.dataset.section === currentId);
+    });
+  }
+
+  let ticking = false;
+  window.addEventListener('scroll', ()=>{
+    if(!ticking){
+      window.requestAnimationFrame(()=>{
+        updateActiveSection();
+        ticking = false;
+      });
+      ticking = true;
+    }
+  });
+
+  updateActiveSection();
+</script>
+
+</body>
+</html>
